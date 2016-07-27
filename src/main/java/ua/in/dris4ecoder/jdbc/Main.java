@@ -20,6 +20,8 @@ public class Main {
 
     private void start() {
         employeeController.getAllEmployees().forEach(System.out::println);
+        System.out.println();
+        System.out.println(employeeController.getEmployeeById(1));
     }
 
     public void setEmployeeController(EmployeeController employeeController) {

@@ -3,6 +3,8 @@ package ua.in.dris4ecoder.jdbc.controllers;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import ua.in.dris4ecoder.jdbc.model.Employee;
 import ua.in.dris4ecoder.jdbc.model.EmployeeDao;
@@ -28,6 +30,11 @@ public class EmployeeController {
             txManager.rollback(status);
             throw new RuntimeException(e);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Employee getEmployeeById(int id) {
+        return employeeDao.load(id);
     }
 
     public void setTxManager(PlatformTransactionManager txManager) {

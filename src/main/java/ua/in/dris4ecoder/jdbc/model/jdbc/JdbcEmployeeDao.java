@@ -2,6 +2,8 @@ package ua.in.dris4ecoder.jdbc.model.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ua.in.dris4ecoder.jdbc.Main;
 import ua.in.dris4ecoder.jdbc.model.Employee;
 import ua.in.dris4ecoder.jdbc.model.EmployeeDao;
@@ -18,6 +20,7 @@ public class JdbcEmployeeDao implements EmployeeDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public Employee load(int id) {
         LOGGER.info("Connection to DB");
 
@@ -42,6 +45,7 @@ public class JdbcEmployeeDao implements EmployeeDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<Employee> findAll() {
         List<Employee> result = new ArrayList<>();
 
