@@ -3,6 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean class="ua.in.dris4ecoder.jdbc.Main" id="main">
+        <property name="employeeController" ref="employeeController"/>
+    </bean>
+
+    <bean class="ua.in.dris4ecoder.jdbc.controllers.EmployeeController" id="employeeController">
+        <property name="txManager" ref="txManager"/>
+        <property name="employeeDao" ref="employeeDao"/>
+    </bean>
+
     <bean class="ua.in.dris4ecoder.jdbc.model.jdbc.JdbcEmployeeDao" id="employeeDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>

@@ -5,6 +5,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import ua.in.dris4ecoder.jdbc.model.Employee;
+import ua.in.dris4ecoder.jdbc.model.EmployeeDao;
 
 import java.util.List;
 
@@ -14,11 +15,26 @@ import java.util.List;
 public class EmployeeController {
 
     private PlatformTransactionManager txManager;
+    private EmployeeDao employeeDao;
 
     public List<Employee> getAllEmployees() {
 
         TransactionStatus status = txManager.getTransaction(new DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED));
-
+        try {
+            List<Employee> result = employeeDao.findAll();
+            txManager.commit(status);
+            return result;
+        } catch (Exception e) {
+            txManager.rollback(status);
+            throw new RuntimeException(e);
+        }
     }
 
+    public void setTxManager(PlatformTransactionManager txManager) {
+        this.txManager = txManager;
+    }
+
+    public void setEmployeeDao(EmployeeDao employeeDao) {
+        this.employeeDao = employeeDao;
+    }
 }

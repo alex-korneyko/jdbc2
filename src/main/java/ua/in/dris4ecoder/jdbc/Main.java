@@ -1,21 +1,28 @@
 package ua.in.dris4ecoder.jdbc;
 
-import ua.in.dris4ecoder.jdbc.model.jdbc.JdbcEmployeeDao;
-import ua.in.dris4ecoder.jdbc.model.EmployeeDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ua.in.dris4ecoder.jdbc.controllers.EmployeeController;
 
 /**
  * Created by Alex Korneyko on 26.07.2016 15:11.
  */
 public class Main {
 
+    private EmployeeController employeeController;
+
     public static void main(String[] args) {
 
-        EmployeeDao jdbcEmployeeDao = new JdbcEmployeeDao();
-        System.out.println("All employees:");
-        jdbcEmployeeDao.getAll().forEach(System.out::println);
-
-        System.out.println("Employee with id = 4");
-        System.out.println(jdbcEmployeeDao.load(4));
+        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        Main main = context.getBean(Main.class);
+        main.start();
     }
 
+    private void start() {
+        employeeController.getAllEmployees().forEach(System.out::println);
+    }
+
+    public void setEmployeeController(EmployeeController employeeController) {
+        this.employeeController = employeeController;
+    }
 }
