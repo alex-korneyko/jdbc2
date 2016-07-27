@@ -6,22 +6,22 @@ import ua.in.dris4ecoder.jdbc.Main;
 import ua.in.dris4ecoder.jdbc.model.Employee;
 import ua.in.dris4ecoder.jdbc.model.EmployeeDao;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcEmployeeDao implements EmployeeDao {
 
+    private DataSource dataSource;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private String dbUrl = "jdbc:postgresql://localhost:5432/company";
-    private String user = "alex";
-    private String password = "111";
 
     @Override
     public Employee load(int id) {
         LOGGER.info("Connection to DB");
 
-        try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE id = ?")) {
             LOGGER.info("Successfully connected to DB\n");
 
@@ -36,7 +36,7 @@ public class JdbcEmployeeDao implements EmployeeDao {
 
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception occurred while connection to DB " + user, e);
+            LOGGER.error("Exception occurred while connection to DB ", e);
             throw new RuntimeException(e);
         }
     }
@@ -47,7 +47,7 @@ public class JdbcEmployeeDao implements EmployeeDao {
 
         LOGGER.info("Connection to DB");
 
-        try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             LOGGER.info("Successfully connected to DB\n");
 
@@ -60,7 +60,7 @@ public class JdbcEmployeeDao implements EmployeeDao {
                 result.add(employee);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception occurred while connection to DB " + user, e);
+            LOGGER.error("Exception occurred while connection to DB " , e);
             throw new RuntimeException(e);
         }
 
@@ -76,5 +76,9 @@ public class JdbcEmployeeDao implements EmployeeDao {
         employee.setSalary(resultSet.getInt("salary"));
         employee.setJoin_date(resultSet.getDate("join_date"));
         return employee;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
